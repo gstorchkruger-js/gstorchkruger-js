@@ -38,8 +38,8 @@
 <br/>
 
 <div align="center">
-  <p><b>💀 Dead by Daylight — reparar gen, esconder, chase (sem atravessar props)</b></p>
-  <img src="https://raw.githubusercontent.com/gstorchkruger-js/gstorchkruger-js/output/dbd-arena-dark.svg?v=4" alt="Dead by Daylight arena" width="920" />
+  <p><b>💀 Dead by Daylight — andar suave, HP cheia, Trapper caça de verdade</b></p>
+  <img src="https://raw.githubusercontent.com/gstorchkruger-js/gstorchkruger-js/output/dbd-arena-dark.svg?v=5" alt="Dead by Daylight arena" width="920" />
 </div>
 
 <br/>
