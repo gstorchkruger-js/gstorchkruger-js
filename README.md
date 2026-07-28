@@ -38,7 +38,7 @@
 <br/>
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/gstorchkruger-js/gstorchkruger-js/output/github-contribution-grid-snake-dark.svg" alt="Snake das contribuições" />
+  <img src="https://raw.githubusercontent.com/gstorchkruger-js/gstorchkruger-js/output/foice-frutas-dark.svg" alt="Foice vs frutas" width="840" />
 </div>
 
 <br/>
@@ -46,4 +46,3 @@
 <div align="center">
   <img src="https://komarev.com/ghpvc/?username=gstorchkruger-js&label=Visitas%20ao%20perfil&color=09f7b5&style=flat" alt="Visitas" />
 </div>
-
