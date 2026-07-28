@@ -39,7 +39,7 @@
 
 <div align="center">
   <p><b>💀 Dead by Daylight — 2 trials no loop (desfechos aleatórios, Trapper também vence)</b></p>
-  <img src="https://raw.githubusercontent.com/gstorchkruger-js/gstorchkruger-js/output/dbd-arena-dark.svg" alt="Dead by Daylight arena" width="920" />
+  <img src="https://raw.githubusercontent.com/gstorchkruger-js/gstorchkruger-js/output/dbd-arena-dark.svg?v=3" alt="Dead by Daylight arena" width="920" />
 </div>
 
 <br/>
