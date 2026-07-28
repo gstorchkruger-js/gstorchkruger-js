@@ -38,7 +38,8 @@
 <br/>
 
 <div align="center">
-  <img src="https://raw.githubusercontent.com/gstorchkruger-js/gstorchkruger-js/output/foice-frutas-dark.svg" alt="Foice vs frutas" width="840" />
+  <p><b>💀 Trial em andamento — The Trapper</b></p>
+  <img src="https://raw.githubusercontent.com/gstorchkruger-js/gstorchkruger-js/output/dbd-arena-dark.svg" alt="Dead by Daylight arena" width="900" />
 </div>
 
 <br/>
