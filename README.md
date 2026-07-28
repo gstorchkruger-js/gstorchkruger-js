@@ -38,8 +38,8 @@
 <br/>
 
 <div align="center">
-  <p><b>💀 Dead by Daylight — todos gens 100% → portão · Trapper móvel</b></p>
-  <img src="https://raw.githubusercontent.com/gstorchkruger-js/gstorchkruger-js/output/dbd-arena-dark.svg?v=6" alt="Dead by Daylight arena" width="920" />
+  <p><b>💀 DbD — gens separados, colisão, sumir ao morrer/escapar, Trapper caça</b></p>
+  <img src="https://raw.githubusercontent.com/gstorchkruger-js/gstorchkruger-js/output/dbd-arena-dark.svg?v=7" alt="Dead by Daylight arena" width="920" />
 </div>
 
 <br/>

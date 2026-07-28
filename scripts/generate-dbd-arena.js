@@ -1,26 +1,26 @@
 /**
- * DbD arena:
- * - Trapper se move (keyframes limitados — SMIL quebra com 200+ pontos)
- * - Todos os gens a 100% antes do portão abrir / fuga
- * - Sem hatch e sem armadilhas
+ * DbD v7 — simulação mais crível:
+ * - gens bem espaçados; progresso SÓ sobe com survivor parado no slot
+ * - colisão com gens/árvores/pedras/paredes/pallets
+ * - andar resampleado por comprimento (sem teleporte)
+ * - morto/escapado some (opacity 0)
+ * - Trapper caça quem está reparando
+ * - sem hatch / sem armadilhas
  */
 const fs = require('fs');
 const path = require('path');
 
 const W = 920;
 const H = 320;
-const GEN_R = 26;
-const SLOT = 32;
-const WALK_SPEED = 42;
-const MAX_KEYS = 64; // limite seguro p/ SMIL em <img>
-
+const MAX_KEYS = 56;
+const WALK = 36; // px/s
 const SURV = [
   { id: 'D', fill: '#f0c75e' },
   { id: 'M', fill: '#ff6b8a' },
   { id: 'C', fill: '#6bcb77' },
   { id: 'J', fill: '#c4a574' },
 ];
-const OUTCOMES = ['4k', '3k', 'gate', 'trade']; // sem hatch
+const OUTCOMES = ['4k', '3k', 'gate', 'trade'];
 
 function rand(a, b) {
   return a + Math.random() * (b - a);
@@ -52,156 +52,168 @@ function esc(s) {
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
-function workSlot(gen, slotIdx = 0) {
-  const angles = [90, 270, 0, 180, 45, 135].map((d) => (d * Math.PI) / 180);
-  const a = angles[slotIdx % angles.length];
-  return P(clamp(gen.x + Math.cos(a) * SLOT, 45, W - 45), clamp(gen.y + Math.sin(a) * SLOT, 58, H - 38));
+function buildMap() {
+  // Gens FIXOS e bem separados (não aleatórios grudados)
+  const gens = [P(120, 100), P(350, 90), P(580, 100), P(800, 95), P(460, 240)];
+  const walls = [
+    { x: 220, y: 150, w: 70, h: 12 },
+    { x: 500, y: 170, w: 80, h: 12 },
+    { x: 680, y: 140, w: 60, h: 12 },
+    { x: 300, y: 200, w: 12, h: 55 },
+  ];
+  const pallets = [P(250, 180), P(520, 200), P(720, 175), P(180, 230)];
+  const trees = [
+    P(90, 200), P(200, 70), P(420, 160), P(640, 250), P(760, 200), P(880, 160), P(300, 280), P(560, 60),
+  ];
+  const rocks = [P(160, 160), P(400, 210), P(650, 80), P(780, 250), P(500, 280)];
+  const hideSpots = [P(95, 230), P(320, 270), P(540, 55), P(850, 220), P(700, 270)];
+  const gate = P(W - 40, 160);
+
+  const blockers = [
+    ...gens.map((g) => ({ c: g, r: 28 })),
+    ...trees.map((t) => ({ c: t, r: 16 })),
+    ...rocks.map((r) => ({ c: r, r: 14 })),
+    ...pallets.map((p) => ({ c: p, r: 18 })),
+    ...walls.map((w) => ({ c: P(w.x + w.w / 2, w.y + w.h / 2), r: Math.max(w.w, w.h) * 0.55 })),
+  ];
+
+  return { gens, walls, pallets, trees, rocks, hideSpots, gate, blockers };
 }
-function kickSlot(gen) {
-  return workSlot(gen, 1);
-}
-function avoidGens(p, gens) {
-  let q = { ...p };
-  for (let iter = 0; iter < 5; iter++) {
-    for (const g of gens) {
-      const d = dist(q, g);
-      const minR = GEN_R + 6;
-      if (d < minR) {
-        if (d < 0.1) q = workSlot(g, ri(0, 3));
-        else {
-          const s = minR / d;
-          q = P(g.x + (q.x - g.x) * s, g.y + (q.y - g.y) * s);
+
+function avoid(p, blockers) {
+  let q = P(clamp(p.x, 40, W - 40), clamp(p.y, 55, H - 35));
+  for (let n = 0; n < 6; n++) {
+    for (const b of blockers) {
+      const d = dist(q, b.c);
+      if (d < b.r) {
+        if (d < 0.2) {
+          q = P(b.c.x + b.r + 2, b.c.y);
+        } else {
+          const s = b.r / d;
+          q = P(b.c.x + (q.x - b.c.x) * s, b.c.y + (q.y - b.c.y) * s);
         }
+        q = P(clamp(q.x, 40, W - 40), clamp(q.y, 55, H - 35));
       }
     }
   }
-  return P(clamp(q.x, 45, W - 45), clamp(q.y, 58, H - 38));
-}
-function nearSafe(p, gens, r = 36) {
-  return avoidGens(P(p.x + rand(-r, r), p.y + rand(-r, r)), gens);
+  return q;
 }
 
-function walkSteps(from, to, gens) {
-  const d = dist(from, to);
-  const steps = Math.max(2, Math.min(8, Math.ceil(d / 45))); // poucos passos
+function slot(gen, i, blockers) {
+  const angles = [1.2, -1.2, 2.5, -2.5, 0.6, -0.6];
+  const a = angles[i % angles.length];
+  return avoid(P(gen.x + Math.cos(a) * 34, gen.y + Math.sin(a) * 34), blockers);
+}
+
+function walk(from, to, blockers) {
+  const a = avoid(from, blockers);
+  const b = avoid(to, blockers);
+  const d = dist(a, b);
+  const steps = Math.max(2, Math.min(6, Math.ceil(d / 50)));
   const out = [];
   for (let i = 1; i <= steps; i++) {
     const t = i / steps;
-    const j = i > 0 && i < steps ? rand(-8, 8) : 0;
-    out.push(avoidGens(P(from.x + (to.x - from.x) * t + j, from.y + (to.y - from.y) * t + j * 0.3), gens));
+    // desvio suave perpendicular (não teleporte)
+    const nx = -(b.y - a.y) / (d || 1);
+    const ny = (b.x - a.x) / (d || 1);
+    const bend = Math.sin(t * Math.PI) * rand(-10, 10);
+    out.push(avoid(P(a.x + (b.x - a.x) * t + nx * bend, a.y + (b.y - a.y) * t + ny * bend), blockers));
   }
   return out;
 }
 
-/** Reduz keyframes para <= maxKeys, preservando início/fim e ordem temporal. */
-function decimate(points, times, maxKeys = MAX_KEYS) {
+/** Resample por comprimento de arco → movimento constante, sem pulos. */
+function resample(points, times, maxKeys = MAX_KEYS) {
   const n = Math.min(points.length, times.length);
-  if (n <= maxKeys) {
-    return { pts: points.slice(0, n), times: times.slice(0, n) };
+  if (n < 2) return { pts: points.slice(0, n), times: times.slice(0, n) };
+
+  // acumular comprimento
+  const seg = [0];
+  for (let i = 1; i < n; i++) seg.push(seg[i - 1] + Math.max(0.01, dist(points[i - 1], points[i])));
+  const totalLen = seg[n - 1];
+  const t0 = times[0];
+  const t1 = Math.max(times[n - 1], t0 + 0.1);
+  const count = Math.min(maxKeys, Math.max(4, n));
+
+  const pts = [];
+  const ts = [];
+  for (let k = 0; k < count; k++) {
+    const u = k / (count - 1);
+    const target = u * totalLen;
+    let i = 1;
+    while (i < n && seg[i] < target) i++;
+    const i0 = Math.max(1, i) - 1;
+    const i1 = Math.min(n - 1, i0 + 1);
+    const span = seg[i1] - seg[i0] || 1;
+    const f = clamp((target - seg[i0]) / span, 0, 1);
+    pts.push(P(points[i0].x + (points[i1].x - points[i0].x) * f, points[i0].y + (points[i1].y - points[i0].y) * f));
+    ts.push(t0 + u * (t1 - t0));
   }
-  const pts = [points[0]];
-  const ts = [times[0]];
-  const inner = maxKeys - 2;
-  for (let i = 1; i <= inner; i++) {
-    const idx = Math.round((i / (inner + 1)) * (n - 1));
-    pts.push(points[idx]);
-    ts.push(times[idx]);
-  }
-  pts.push(points[n - 1]);
-  ts.push(times[n - 1]);
-  // garantir tempos crescentes
-  for (let i = 1; i < ts.length; i++) {
-    if (ts[i] <= ts[i - 1]) ts[i] = ts[i - 1] + 0.05;
-  }
+  ts[0] = t0;
+  ts[count - 1] = t1;
+  for (let i = 1; i < count; i++) if (ts[i] <= ts[i - 1]) ts[i] = ts[i - 1] + 0.02;
   return { pts, times: ts };
 }
 
-function packTimes(secs, total) {
+function packTimes(secs) {
   const n = secs.length;
-  if (n < 2) return { keyTimes: '0;1' };
-  // redistribui proporcional ao tempo real, forçando 0..1 estrito
+  if (n < 2) return '0;1';
   const t0 = secs[0];
   const span = Math.max(0.001, secs[n - 1] - t0);
   const raw = secs.map((s) => clamp((s - t0) / span, 0, 1));
   raw[0] = 0;
-  for (let i = 1; i < n; i++) {
-    if (raw[i] <= raw[i - 1]) raw[i] = Math.min(0.999, raw[i - 1] + 1 / (n * 2));
-  }
+  for (let i = 1; i < n; i++) if (raw[i] <= raw[i - 1]) raw[i] = Math.min(0.999, raw[i - 1] + 0.008);
   raw[n - 1] = 1;
-  return { keyTimes: raw.map((t) => t.toFixed(4)).join(';') };
+  return raw.map((t) => t.toFixed(4)).join(';');
 }
 
-function Timeline(gens) {
-  this.gens = gens;
-  this.pts = [];
-  this.times = [];
+function Actor(blockers, start) {
+  this.blockers = blockers;
+  this.pts = [avoid(start, blockers)];
+  this.times = [0];
   this.t = 0;
 }
-Timeline.prototype.at = function (p) {
-  const q = avoidGens(p, this.gens);
-  if (!this.pts.length) {
-    this.pts.push(q);
-    this.times.push(this.t);
-    return this;
-  }
-  for (const s of walkSteps(this.pts[this.pts.length - 1], q, this.gens)) {
-    const d = dist(this.pts[this.pts.length - 1], s);
-    this.t += Math.max(0.15, d / WALK_SPEED);
+Actor.prototype.go = function (p) {
+  const steps = walk(this.pts[this.pts.length - 1], p, this.blockers);
+  for (const s of steps) {
+    this.t += Math.max(0.2, dist(this.pts[this.pts.length - 1], s) / WALK);
     this.pts.push(s);
     this.times.push(this.t);
   }
   return this;
 };
-Timeline.prototype.wait = function (sec) {
-  if (!this.pts.length) return this;
-  const last = this.pts[this.pts.length - 1];
+Actor.prototype.wait = function (sec) {
   this.t += sec;
-  this.pts.push({ ...last });
+  this.pts.push({ ...this.pts[this.pts.length - 1] });
   this.times.push(this.t);
   return this;
 };
-Timeline.prototype.shift = function (t0) {
-  this.times = this.times.map((t) => t + t0);
-  this.t += t0;
+Actor.prototype.shift = function (dt) {
+  this.times = this.times.map((t) => t + dt);
+  this.t += dt;
   return this;
 };
-Timeline.prototype.packed = function () {
-  return decimate(this.pts, this.times, MAX_KEYS);
+Actor.prototype.out = function () {
+  return resample(this.pts, this.times, MAX_KEYS);
 };
-
-function buildMap() {
-  const gens = shuffle([P(160, 120), P(380, 95), P(600, 125), P(790, 105), P(480, 235)]);
-  const pallets = shuffle([P(270, 165), P(500, 175), P(700, 160), P(200, 215)]).slice(0, 4);
-  const hideSpots = [P(100, 205), P(320, 255), P(550, 65), P(750, 255), P(430, 185), P(860, 185)].map((p) =>
-    avoidGens(p, gens)
-  );
-  const trees = Array.from({ length: 10 }, () => avoidGens(P(rand(70, W - 70), rand(70, H - 45)), gens));
-  const rocks = Array.from({ length: 6 }, () => avoidGens(P(rand(80, W - 80), rand(80, H - 45)), gens));
-  return { gens, pallets, hideSpots, trees, rocks, gateA: P(W - 42, 115), gateB: P(W - 42, 230) };
-}
 
 function scenery(map) {
   let s = '';
   for (let x = 0; x < W; x += 40) {
     for (let y = 40; y < H; y += 40) {
-      if (Math.random() < 0.28) s += `<rect x="${x}" y="${y}" width="40" height="40" fill="#12161c" opacity="0.28"/>`;
+      if (Math.random() < 0.22) s += `<rect x="${x}" y="${y}" width="40" height="40" fill="#12161c" opacity="0.25"/>`;
     }
   }
   for (const t of map.trees) {
-    s += `<g transform="translate(${t.x},${t.y})" opacity="0.6">
+    s += `<g transform="translate(${t.x},${t.y})" opacity="0.65">
       <rect x="-2" y="0" width="4" height="14" fill="#3d2b1f"/>
-      <ellipse cy="-6" rx="11" ry="13" fill="#1e3a2f"/></g>`;
+      <ellipse cy="-6" rx="12" ry="14" fill="#1e3a2f"/></g>`;
   }
   for (const r of map.rocks) {
-    s += `<ellipse cx="${r.x}" cy="${r.y}" rx="${ri(8, 13)}" ry="${ri(5, 8)}" fill="#2a3038" stroke="#3d4450" opacity="0.75"/>`;
+    s += `<ellipse cx="${r.x}" cy="${r.y}" rx="11" ry="7" fill="#2a3038" stroke="#3d4450" opacity="0.8"/>`;
   }
-  for (const [x, y, w, h] of [
-    [240, 130, 55, 10],
-    [520, 200, 70, 10],
-    [680, 120, 50, 10],
-    [350, 200, 10, 45],
-  ]) {
-    s += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" fill="#252b33" stroke="#3d4450"/>`;
+  for (const w of map.walls) {
+    s += `<rect x="${w.x}" y="${w.y}" width="${w.w}" height="${w.h}" rx="2" fill="#252b33" stroke="#3d4450"/>`;
   }
   for (const p of map.pallets) {
     s += `<rect x="${p.x - 18}" y="${p.y - 4}" width="36" height="8" rx="1" fill="#6b4f2e" stroke="#c4a574"/>
@@ -210,61 +222,55 @@ function scenery(map) {
   return s;
 }
 
-function movingActor(points, timesSec, total, inner, size = 50) {
-  const d = decimate(points, timesSec, MAX_KEYS);
-  const { keyTimes } = packTimes(d.times, total);
-  const xs = d.pts.map((p) => (p.x - size / 2).toFixed(1)).join(';');
-  const ys = d.pts.map((p) => (p.y - size / 2).toFixed(1)).join(';');
-  const x0 = (d.pts[0].x - size / 2).toFixed(1);
-  const y0 = (d.pts[0].y - size / 2).toFixed(1);
-  // sanity: keyTimes count
-  const nkt = keyTimes.split(';').length;
-  if (nkt !== d.pts.length) {
-    // fallback evenly spaced
-    const even = d.pts.map((_, i) => (i / (d.pts.length - 1)).toFixed(4)).join(';');
-    return mover(x0, y0, size, xs, ys, even, total, inner);
-  }
-  return mover(x0, y0, size, xs, ys, keyTimes, total, inner);
-}
-function mover(x0, y0, size, xs, ys, keyTimes, total, inner) {
+function movingActor(pack, total, inner, size = 50) {
+  const kt = packTimes(pack.times);
+  const xs = pack.pts.map((p) => (p.x - size / 2).toFixed(1)).join(';');
+  const ys = pack.pts.map((p) => (p.y - size / 2).toFixed(1)).join(';');
+  const x0 = (pack.pts[0].x - size / 2).toFixed(1);
+  const y0 = (pack.pts[0].y - size / 2).toFixed(1);
   return `
   <svg x="${x0}" y="${y0}" width="${size}" height="${size}" overflow="visible">
-    <animate attributeName="x" values="${xs}" keyTimes="${keyTimes}" dur="${total}s" begin="0s" repeatCount="indefinite" calcMode="linear"/>
-    <animate attributeName="y" values="${ys}" keyTimes="${keyTimes}" dur="${total}s" begin="0s" repeatCount="indefinite" calcMode="linear"/>
+    <animate attributeName="x" values="${xs}" keyTimes="${kt}" dur="${total}s" begin="0s" repeatCount="indefinite" calcMode="linear"/>
+    <animate attributeName="y" values="${ys}" keyTimes="${kt}" dur="${total}s" begin="0s" repeatCount="indefinite" calcMode="linear"/>
     <g transform="translate(${size / 2},${size / 2})">${inner}</g>
   </svg>`;
 }
 
 function hpBar(total, hits) {
-  const safeHits = (hits || []).slice().sort((a, b) => a.t - b.t);
   const frames = [{ t: 0, hp: 1 }];
   let hp = 1;
-  for (const h of safeHits) {
-    const ht = Math.max(0.08, h.t);
-    frames.push({ t: Math.max(frames[frames.length - 1].t + 0.08, ht - 0.25), hp });
+  for (const h of (hits || []).slice().sort((a, b) => a.t - b.t)) {
+    frames.push({ t: Math.max(frames[frames.length - 1].t + 0.1, h.t - 0.2), hp });
     hp = clamp(h.hpAfter, 0, 1);
-    frames.push({ t: ht, hp });
+    frames.push({ t: Math.max(h.t, frames[frames.length - 1].t + 0.05), hp });
   }
   frames.push({ t: total, hp });
-  const widths = frames.map((f) => Math.max(0, 20 * f.hp).toFixed(1)).join(';');
+  const widths = frames.map((f) => (20 * f.hp).toFixed(1)).join(';');
   const fills = frames.map((f) => (f.hp > 0.55 ? '#3fb950' : f.hp > 0.25 ? '#f0c75e' : '#ff4444')).join(';');
-  const { keyTimes } = packTimes(
-    frames.map((f) => f.t),
-    total
-  );
+  const kt = packTimes(frames.map((f) => f.t));
   return `
     <rect x="-11" y="-28" width="22" height="4" rx="1" fill="#21262d" stroke="#30363d" stroke-width="0.5"/>
     <rect x="-11" y="-28" width="20" height="4" rx="1" fill="#3fb950">
-      <animate attributeName="width" values="${widths}" keyTimes="${keyTimes}" dur="${total}s" begin="0s" repeatCount="indefinite"/>
-      <animate attributeName="fill" values="${fills}" keyTimes="${keyTimes}" dur="${total}s" begin="0s" repeatCount="indefinite"/>
+      <animate attributeName="width" values="${widths}" keyTimes="${kt}" dur="${total}s" repeatCount="indefinite"/>
+      <animate attributeName="fill" values="${fills}" keyTimes="${kt}" dur="${total}s" repeatCount="indefinite"/>
     </rect>`;
 }
 
-function survBody(s, total, hits) {
-  return `${hpBar(total, hits)}
+function fadeAnim(total, goneT) {
+  if (goneT == null || goneT >= total) return '';
+  const a = clamp((goneT - 0.4) / total, 0, 0.98);
+  const b = clamp(goneT / total, a + 0.01, 0.99);
+  return `<animate attributeName="opacity" values="1;1;0;0" keyTimes="0;${a.toFixed(4)};${b.toFixed(4)};1" dur="${total}s" repeatCount="indefinite"/>`;
+}
+
+function survBody(s, total, hits, goneT) {
+  return `<g>
+    ${fadeAnim(total, goneT)}
+    ${hpBar(total, hits)}
     <ellipse cy="3" rx="8" ry="10" fill="${s.fill}" stroke="#0d1117" stroke-width="1.2"/>
     <circle cy="-11" r="5.5" fill="${s.fill}" stroke="#0d1117" stroke-width="1.2"/>
-    <text y="4" text-anchor="middle" dominant-baseline="central" font-size="8" font-weight="700" fill="#0d1117" font-family="Arial">${s.id}</text>`;
+    <text y="4" text-anchor="middle" dominant-baseline="central" font-size="8" font-weight="700" fill="#0d1117" font-family="Arial">${s.id}</text>
+  </g>`;
 }
 
 function trapperBody() {
@@ -281,263 +287,66 @@ function trapperBody() {
     </circle>`;
 }
 
-function genProp(g, i, total, repairWindows) {
-  const keyframes = [{ t: 0, p: 0 }];
+function genProp(g, i, total, windows) {
+  // windows: [{t0,t1,from,to}] — progresso só muda nesses intervalos
+  const kf = [{ t: 0, p: 0 }];
   let cur = 0;
-  for (const w of repairWindows) {
-    keyframes.push({ t: w.t0, p: cur });
+  for (const w of windows) {
+    kf.push({ t: w.t0, p: cur });
     cur = w.to;
-    keyframes.push({ t: w.t1, p: cur });
+    kf.push({ t: w.t1, p: cur });
   }
-  keyframes.push({ t: total, p: cur });
+  kf.push({ t: total, p: cur });
   const cleaned = [];
-  for (const k of keyframes) {
-    if (!cleaned.length || k.t > cleaned[cleaned.length - 1].t + 0.1) cleaned.push({ ...k });
-    else cleaned[cleaned.length - 1].p = k.p;
+  for (const k of kf) {
+    if (!cleaned.length || k.t >= cleaned[cleaned.length - 1].t + 0.12) cleaned.push({ ...k });
+    else cleaned[cleaned.length - 1] = { t: cleaned[cleaned.length - 1].t, p: k.p };
   }
-  if (cleaned[cleaned.length - 1].t < total - 0.01) cleaned.push({ t: total, p: cleaned[cleaned.length - 1].p });
+  if (cleaned[cleaned.length - 1].t < total) cleaned.push({ t: total, p: cleaned[cleaned.length - 1].p });
   const widths = cleaned.map((k) => (28 * k.p).toFixed(1)).join(';');
-  const { keyTimes } = packTimes(
-    cleaned.map((k) => k.t),
-    total
-  );
-  const done = cur >= 0.999;
+  const kt = packTimes(cleaned.map((k) => k.t));
   return `
   <g transform="translate(${g.x},${g.y})">
-    <circle r="${GEN_R - 4}" fill="#0d1117" opacity="0.35"/>
-    <rect x="-18" y="-12" width="36" height="24" rx="3" fill="#1c2128" stroke="${done ? '#3fb950' : '#6e7681'}" stroke-width="1.5"/>
+    <circle r="24" fill="#0d1117" opacity="0.4"/>
+    <rect x="-18" y="-12" width="36" height="24" rx="3" fill="#1c2128" stroke="#6e7681" stroke-width="1.5"/>
     <rect x="-14" y="-8" width="28" height="8" rx="1" fill="#0d1117"/>
     <rect x="-11" y="-22" width="6" height="12" fill="#8b949e">
-      <animate attributeName="y" values="-22;-25;-22" dur="2.2s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="-22;-25;-22" dur="2.3s" repeatCount="indefinite"/>
     </rect>
     <rect x="5" y="-22" width="6" height="12" fill="#8b949e">
-      <animate attributeName="y" values="-22;-24;-22" dur="2.5s" begin="0.4s" repeatCount="indefinite"/>
+      <animate attributeName="y" values="-22;-24;-22" dur="2.6s" begin="0.35s" repeatCount="indefinite"/>
     </rect>
     <rect x="-16" y="14" width="32" height="5" rx="1" fill="#21262d"/>
     <rect x="-16" y="14" width="0" height="5" rx="1" fill="#3fb950">
-      <animate attributeName="width" values="${widths}" keyTimes="${keyTimes}" dur="${total}s" repeatCount="indefinite"/>
+      <animate attributeName="width" values="${widths}" keyTimes="${kt}" dur="${total}s" repeatCount="indefinite"/>
     </rect>
     <text y="34" text-anchor="middle" fill="#7d8590" font-size="8" font-family="monospace">GEN ${i + 1}</text>
   </g>`;
 }
 
-function gateProp(g, total, openSec) {
-  const a = clamp(openSec / total, 0.05, 0.97);
+function gateProp(g, total, openT) {
+  const a = clamp(openT / total, 0.05, 0.96);
   return `
   <g transform="translate(${g.x},${g.y})">
-    <rect x="-12" y="-44" width="16" height="88" fill="#252b33" stroke="#6e7681"/>
-    <!-- portão fechado (escuro) → abre (verde) só depois dos gens 100% -->
-    <rect x="-9" y="-41" width="10" height="82" fill="#3fb950" opacity="0.05">
-      <animate attributeName="opacity" values="0.05;0.05;0.85;0.85" keyTimes="0;${a.toFixed(4)};${Math.min(0.999, a + 0.015).toFixed(4)};1" dur="${total}s" repeatCount="indefinite"/>
+    <rect x="-12" y="-50" width="18" height="100" fill="#252b33" stroke="#6e7681"/>
+    <rect x="-9" y="-47" width="12" height="94" fill="#3fb950" opacity="0.04">
+      <animate attributeName="opacity" values="0.04;0.04;0.9;0.9" keyTimes="0;${a.toFixed(4)};${Math.min(0.999, a + 0.02).toFixed(4)};1" dur="${total}s" repeatCount="indefinite"/>
     </rect>
-    <text y="54" text-anchor="middle" fill="#7d8590" font-size="8" font-family="monospace">GATE</text>
-    <text y="-50" text-anchor="middle" fill="#484f58" font-size="7" font-family="monospace">
-      <animate attributeName="fill" values="#484f58;#484f58;#3fb950;#3fb950" keyTimes="0;${a.toFixed(4)};${Math.min(0.999, a + 0.015).toFixed(4)};1" dur="${total}s" repeatCount="indefinite"/>
+    <text y="62" text-anchor="middle" fill="#7d8590" font-size="8" font-family="monospace">GATE</text>
+    <text y="-56" text-anchor="middle" font-size="8" font-family="monospace" fill="#484f58">
+      <animate attributeName="fill" values="#484f58;#484f58;#3fb950;#3fb950" keyTimes="0;${a.toFixed(4)};${Math.min(0.999, a + 0.02).toFixed(4)};1" dur="${total}s" repeatCount="indefinite"/>
       OPEN
     </text>
   </g>`;
 }
 
-/**
- * Match: cada survivor repara gens até TODOS estarem 100%.
- * Só então o portão abre e (se outcome gate/trade) fogem.
- * Trapper patrulha, chuta, caça e bate várias vezes.
- */
-function scriptMatch(map, t0, outcome) {
-  const gens = map.gens;
-  const nGen = gens.length;
-  // quem repara qual gen (cobertura total)
-  const assignments = gens.map((_, gi) => gi % SURV.length);
-
-  const repairByGen = gens.map(() => []);
-  const order = shuffle([0, 1, 2, 3]);
-  const huntOrder = order.slice();
-
-  // Fase 1 — reparo de TODOS os gens (sobreviventes visitam em sequência)
-  const survTls = SURV.map(() => new Timeline(gens));
-  const hitsBySurv = SURV.map(() => []);
-
-  // tempo de reparo por gen
-  const repairDur = rand(4.2, 5.5);
-
-  // Round-robin: para cada gen, o survivor designado vai, para, completa 100%
-  let globalT = 0;
-  // sincronizar aproximado: cada survivor faz seus gens em ordem
-  const gensPerSurv = SURV.map((_, si) => gens.map((g, gi) => ({ g, gi })).filter((_, gi) => assignments[gi] === si));
-
-  // Ensure every gen assigned — fix assignments so each gen has exactly one worker
-  // already gi % 4 — with 5 gens, survivors 0-3 get gens, gen 4 goes to surv 0. Good all covered.
-
-  SURV.forEach((_, si) => {
-    const tl = survTls[si];
-    const myGens = gensPerSurv[si];
-    const start = nearSafe(myGens[0] ? workSlot(myGens[0].g, si) : map.hideSpots[si], gens, 50);
-    tl.at(start);
-
-    for (const { g, gi } of myGens) {
-      const slot = workSlot(g, si);
-      tl.at(slot);
-      const t0r = tl.t;
-      tl.wait(repairDur);
-      const t1r = tl.t;
-      repairByGen[gi].push({ t0: t0r, t1: t1r, to: 1 }); // 100%
-      // chance de esconder se não for o último gen
-      if (Math.random() < 0.45) {
-        tl.at(map.hideSpots[si % map.hideSpots.length]);
-        tl.wait(rand(1.2, 2.0));
-      }
-    }
-  });
-
-  // Momento em que TODOS os gens estão 100% = max dos t1 de reparo
-  let allGensDoneT = 0;
-  for (const wins of repairByGen) {
-    for (const w of wins) allGensDoneT = Math.max(allGensDoneT, w.t1);
-  }
-
-  // Fase 2 — após gens prontos: gate abre; fuga OU massacre
-  SURV.forEach((_, si) => {
-    const tl = survTls[si];
-    // esperar até allGensDoneT (ficar escondido / idle)
-    const hide = map.hideSpots[si % map.hideSpots.length];
-    if (tl.t < allGensDoneT) {
-      tl.at(hide);
-      tl.wait(Math.max(0.3, allGensDoneT - tl.t));
-    }
-
-    const canEscape = outcome === 'gate' || (outcome === 'trade' && si >= 2) || (outcome === '3k' && si === 3);
-    const willDie = outcome === '4k' || (outcome === '3k' && si < 3) || (outcome === 'trade' && si < 2);
-
-    if (canEscape && !willDie) {
-      // portão liberado
-      tl.at(nearSafe(map.gateA, gens, 14));
-      tl.wait(1.5);
-    } else {
-      // chase / down perto do gate ou pallet
-      const pallet = map.pallets[si % map.pallets.length];
-      tl.at(nearSafe(pallet, gens, 12));
-      tl.wait(0.4);
-      hitsBySurv[si].push({ t: tl.t, hpAfter: 0.5 });
-      tl.wait(0.8);
-      tl.at(nearSafe(map.pallets[(si + 1) % map.pallets.length], gens, 10));
-      hitsBySurv[si].push({ t: tl.t, hpAfter: willDie ? 0 : 0.25 });
-      tl.wait(willDie ? 2.5 : 1.2);
-      if (!willDie) {
-        tl.at(nearSafe(map.gateA, gens, 16));
-        tl.wait(1);
-      }
-    }
-  });
-
-  // Killer timeline — se move com poucos waypoints
-  const k = new Timeline(gens);
-  k.at(nearSafe(gens[2], gens, 50));
-  k.wait(1);
-  // visita gens sendo reparados (kick em 2 gens)
-  for (const gi of shuffle([0, 1, 2, 3, 4]).slice(0, 2)) {
-    k.at(kickSlot(gens[gi]));
-    k.wait(0.8);
-    // regressão leve se ainda não completo
-    const wins = repairByGen[gi];
-    if (wins.length && k.t < wins[0].t1) {
-      // kick durante reparo → empurra to para baixo depois
-      wins.push({ t0: k.t - 0.3, t1: k.t, to: 0.55, kick: true });
-    }
-  }
-  // caça sobreviventes
-  for (const si of huntOrder) {
-    k.at(nearSafe(map.pallets[si % map.pallets.length], gens, 10));
-    k.wait(0.7);
-    k.at(nearSafe(map.hideSpots[si % map.hideSpots.length], gens, 12));
-    k.wait(0.55);
-  }
-  // endgame no gate
-  k.at(nearSafe(map.gateA, gens, 40));
-  k.wait(1.5);
-  k.at(nearSafe(gens[0], gens, 35));
-  k.wait(0.8);
-
-  // shift all by t0
-  for (const tl of survTls) tl.shift(t0);
-  k.shift(t0);
-  allGensDoneT += t0;
-
-  // Rebuild gen windows: each gen must end at 100%
-  // If kick interrupted, add final repair to 100% after
-  const genWindowsAbs = repairByGen.map((wins, gi) => {
-    const sorted = wins
-      .map((w) => ({ t0: w.t0 + t0, t1: w.t1 + t0, to: w.to, kick: w.kick }))
-      .sort((a, b) => a.t0 - b.t0);
-    // force final to 1.0
-    if (!sorted.length) {
-      sorted.push({ t0: t0 + 2, t1: t0 + 2 + repairDur, to: 1 });
-    } else {
-      const last = sorted[sorted.length - 1];
-      if (last.to < 1) {
-        sorted.push({
-          t0: last.t1 + 0.5,
-          t1: last.t1 + 0.5 + repairDur * 0.6,
-          to: 1,
-        });
-        allGensDoneT = Math.max(allGensDoneT, last.t1 + 0.5 + repairDur * 0.6);
-      } else {
-        allGensDoneT = Math.max(allGensDoneT, last.t1);
-      }
-    }
-    // normalize progressive from→to chain for display
-    let cur = 0;
-    return sorted.map((w) => {
-      let to = w.kick ? Math.min(cur, w.to) : Math.max(cur, w.to);
-      if (!w.kick) to = w.to >= 1 ? 1 : Math.max(cur + 0.1, w.to);
-      // kick regresses
-      if (w.kick) to = Math.max(0.1, cur - 0.2);
-      const row = { t0: w.t0, t1: w.t1, to };
-      cur = to;
-      return row;
-    });
-  });
-
-  // Re-ensure last frame of each gen is 1
-  for (const wins of genWindowsAbs) {
-    if (!wins.length) continue;
-    const last = wins[wins.length - 1];
-    if (last.to < 1) {
-      wins.push({ t0: last.t1 + 0.3, t1: last.t1 + repairDur * 0.5, to: 1 });
-      allGensDoneT = Math.max(allGensDoneT, last.t1 + repairDur * 0.5);
-    }
-  }
-
-  const survData = survTls.map((tl, si) => {
-    const pack = tl.packed();
-    return {
-      pts: pack.pts,
-      times: pack.times,
-      hits: hitsBySurv[si].map((h) => ({ t: h.t + t0, hpAfter: h.hpAfter })),
-      endT: tl.t,
-    };
-  });
-
-  const kPack = k.packed();
-  const matchEnd = Math.max(k.t, ...survData.map((s) => s.endT), allGensDoneT + 3);
-
-  return {
-    outcome,
-    survData,
-    killer: { pts: kPack.pts, times: kPack.times },
-    genWindows: genWindowsAbs,
-    matchEnd,
-    gateOpenT: allGensDoneT, // portão só abre aqui
-    resolveT: matchEnd - 2,
-  };
-}
-
 function banner(total, events) {
   return events
     .map((e) => {
-      const a = Math.max(0, (e.t - 1.2) / total);
+      const a = Math.max(0, (e.t - 1) / total);
       const b = clamp(e.t / total, 0.02, 0.97);
-      const c = Math.min(1, (e.t + 3) / total);
-      const d = Math.min(1, (e.t + 4.2) / total);
+      const c = Math.min(1, (e.t + 2.8) / total);
+      const d = Math.min(1, (e.t + 4) / total);
       return `
   <g opacity="0">
     <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;${a.toFixed(4)};${b.toFixed(4)};${c.toFixed(4)};${d.toFixed(4)};1" dur="${total}s" repeatCount="indefinite"/>
@@ -548,18 +357,178 @@ function banner(total, events) {
     .join('\n');
 }
 
+function scriptMatch(map, t0, outcome) {
+  const { gens, blockers, hideSpots, pallets, gate } = map;
+  const repairDur = rand(5.0, 6.5);
+
+  // Cada gen → um survivor (5 gens, 4 surv: um faz 2)
+  const owner = [0, 1, 2, 3, ri(0, 3)];
+  const gensOf = SURV.map(() => []);
+  gens.forEach((g, gi) => gensOf[owner[gi]].push({ g, gi }));
+
+  const actors = SURV.map((_, si) => new Actor(blockers, nearSafeStart(gensOf[si][0]?.g || gens[0], blockers, si)));
+  const hits = SURV.map(() => []);
+  const goneAt = SURV.map(() => null);
+  const genWins = gens.map(() => []);
+
+  // --- Fase reparo: um gen por vez globalmente ajuda o Trapper a caçar, mas survivors paralelos ---
+  // Cada survivor repara seus gens; Trapper escolhe alvos entre quem está reparando.
+  const repairEvents = []; // {si, gi, t0, t1, slot}
+
+  SURV.forEach((_, si) => {
+    const a = actors[si];
+    for (const { g, gi } of gensOf[si]) {
+      const sl = slot(g, si, blockers);
+      a.go(sl);
+      const tStart = a.t;
+      a.wait(repairDur);
+      const tEnd = a.t;
+      genWins[gi].push({ t0: tStart, t1: tEnd, from: 0, to: 1 });
+      repairEvents.push({ si, gi, t0: tStart, t1: tEnd, slot: sl });
+      // esconde um pouco
+      if (Math.random() < 0.5) {
+        a.go(hideSpots[si % hideSpots.length]);
+        a.wait(rand(1.0, 1.8));
+      }
+    }
+  });
+
+  let allDoneT = 0;
+  for (const ev of repairEvents) allDoneT = Math.max(allDoneT, ev.t1);
+
+  // Trapper: caça quem está no gen (vai até o slot durante a janela de reparo)
+  const killer = new Actor(blockers, avoid(P(W / 2, 70), blockers));
+  killer.wait(0.8);
+  const huntList = shuffle(repairEvents.slice());
+  for (const ev of huntList.slice(0, Math.min(4, huntList.length))) {
+    // chegar no meio do reparo
+    const arrive = ev.t0 + (ev.t1 - ev.t0) * rand(0.35, 0.7);
+    // avançar tempo do killer até perto de arrive (patrulha)
+    while (killer.t < arrive - 2.5) {
+      killer.go(avoid(P(rand(100, W - 100), rand(70, H - 50)), blockers));
+      killer.wait(0.3);
+      if (killer.pts.length > 40) break;
+    }
+    killer.go(ev.slot);
+    killer.wait(0.6);
+    // hit no survivor se ainda está na janela
+    if (killer.t >= ev.t0 && killer.t <= ev.t1 + 1.5) {
+      const hp1 = 0.5;
+      hits[ev.si].push({ t: Math.max(killer.t, ev.t0 + 0.5), hpAfter: hp1 });
+      // survivor foge (já programado depois do wait — ok visual)
+    }
+    killer.go(pallets[ev.si % pallets.length]);
+    killer.wait(0.5);
+  }
+
+  // sincronizar: survivors esperam até allDone se ainda não chegaram
+  SURV.forEach((_, si) => {
+    const a = actors[si];
+    if (a.t < allDoneT) {
+      a.go(hideSpots[si % hideSpots.length]);
+      a.wait(Math.max(0.4, allDoneT - a.t));
+    }
+  });
+
+  const gateOpenT = allDoneT + 0.4;
+
+  // Endgame após TODOS os gens 100%
+  const dieSet = new Set();
+  if (outcome === '4k') [0, 1, 2, 3].forEach((i) => dieSet.add(i));
+  if (outcome === '3k') [0, 1, 2].forEach((i) => dieSet.add(i));
+  if (outcome === 'trade') [0, 1].forEach((i) => dieSet.add(i));
+
+  // Trapper caça no endgame
+  for (const si of shuffle([0, 1, 2, 3])) {
+    if (!dieSet.has(si) && outcome === 'gate') continue;
+    killer.go(pallets[si % pallets.length]);
+    killer.wait(0.45);
+    if (dieSet.has(si)) {
+      hits[si].push({ t: Math.max(actors[si].t, killer.t), hpAfter: 0 });
+    } else if (outcome !== 'gate') {
+      hits[si].push({ t: Math.max(actors[si].t, killer.t), hpAfter: 0.35 });
+    }
+  }
+
+  SURV.forEach((_, si) => {
+    const a = actors[si];
+    if (dieSet.has(si)) {
+      a.go(pallets[si % pallets.length]);
+      a.wait(0.5);
+      // garantir morte
+      if (!hits[si].some((h) => h.hpAfter === 0)) hits[si].push({ t: a.t, hpAfter: 0 });
+      goneAt[si] = a.t + 0.6;
+      a.wait(0.8);
+      // “some” — vai pra fora do mapa
+      a.go(P(-40, a.pts[a.pts.length - 1].y));
+      a.wait(0.3);
+    } else {
+      // escapa pelo portão (só depois de aberto)
+      if (a.t < gateOpenT) a.wait(gateOpenT - a.t + 0.2);
+      a.go(avoid(P(gate.x - 25, gate.y + (si - 1.5) * 12), blockers));
+      a.wait(0.8);
+      goneAt[si] = a.t;
+      a.go(P(W + 50, gate.y + (si - 1.5) * 12));
+      a.wait(0.4);
+    }
+  });
+
+  killer.go(avoid(P(gate.x - 80, gate.y), blockers));
+  killer.wait(1.2);
+
+  // shift
+  for (const a of actors) a.shift(t0);
+  killer.shift(t0);
+
+  const genWindows = genWins.map((wins) =>
+    wins.map((w) => ({
+      t0: w.t0 + t0,
+      t1: w.t1 + t0,
+      to: 1,
+    }))
+  );
+
+  // Se kick visual: não vamos regredir mais (evita “completar sozinho” estranho)
+
+  const survData = actors.map((a, si) => {
+    const pack = a.out();
+    return {
+      pack,
+      hits: hits[si].map((h) => ({ t: h.t + t0, hpAfter: h.hpAfter })),
+      goneAt: goneAt[si] != null ? goneAt[si] + t0 : null,
+      endT: a.t,
+    };
+  });
+
+  const kPack = killer.out();
+  const matchEnd = Math.max(killer.t, ...survData.map((s) => s.endT)) + 0.5;
+
+  return {
+    outcome,
+    survData,
+    killer: kPack,
+    genWindows,
+    matchEnd,
+    gateOpenT: gateOpenT + t0,
+    resolveT: matchEnd - 1.5,
+  };
+}
+
+function nearSafeStart(gen, blockers, si) {
+  return avoid(P(gen.x + rand(-60, 60), gen.y + rand(40, 80)), blockers);
+}
+
 function generate() {
   const seed = Date.now().toString(36);
   const map = buildMap();
-  const killerWins = ['4k', '3k'];
   let o1 = pick(OUTCOMES);
   let o2 = pick(OUTCOMES.filter((o) => o !== o1));
-  if (!killerWins.includes(o1) && !killerWins.includes(o2)) o2 = pick(killerWins);
+  if (!['4k', '3k'].includes(o1) && !['4k', '3k'].includes(o2)) o2 = pick(['4k', '3k']);
 
-  const match1 = scriptMatch(map, 0, o1);
-  const gap = 3;
-  const match2 = scriptMatch(map, match1.matchEnd + gap, o2);
-  const total = +(match2.matchEnd + 1.2).toFixed(2);
+  const m1 = scriptMatch(map, 0, o1);
+  const gap = 2.5;
+  const m2 = scriptMatch(map, m1.matchEnd + gap, o2);
+  const total = +(m2.matchEnd + 1).toFixed(2);
 
   const labels = {
     '4k': { text: 'THE ENTITY HUNGERS — 4K', color: '#ff4444' },
@@ -569,46 +538,48 @@ function generate() {
   };
 
   const survNodes = SURV.map((s, i) => {
-    const p1 = match1.survData[i];
-    const p2 = match2.survData[i];
-    const bridge = P(W / 2 + (i - 1.5) * 40, H / 2);
-    const mid = new Timeline(map.gens);
-    mid.pts = [{ ...p1.pts[p1.pts.length - 1] }];
-    mid.times = [p1.times[p1.times.length - 1]];
-    mid.t = p1.times[p1.times.length - 1];
-    mid.at(bridge);
-    mid.wait(1);
-    mid.at(p2.pts[0]);
-    const midP = mid.packed();
-    const pts = [...p1.pts, ...midP.pts.slice(1), ...p2.pts.slice(1)];
-    const times = [...p1.times, ...midP.times.slice(1), ...p2.times.slice(1)];
-    return movingActor(pts, times, total, survBody(s, total, [...p1.hits, ...p2.hits]), 50);
+    const p1 = m1.survData[i];
+    const p2 = m2.survData[i];
+    // bridge suave
+    const mid = new Actor(map.blockers, p1.pack.pts[p1.pack.pts.length - 1]);
+    mid.t = p1.pack.times[p1.pack.times.length - 1];
+    mid.times = [mid.t];
+    mid.pts = [p1.pack.pts[p1.pack.pts.length - 1]];
+    mid.go(P(W / 2 + (i - 1.5) * 36, H / 2));
+    mid.wait(0.8);
+    mid.go(p2.pack.pts[0]);
+    const midOut = mid.out();
+    const pts = [...p1.pack.pts, ...midOut.pts.slice(1), ...p2.pack.pts.slice(1)];
+    const times = [...p1.pack.times, ...midOut.times.slice(1), ...p2.pack.times.slice(1)];
+    const pack = resample(pts, times, MAX_KEYS);
+    // gone: primeiro evento de sumiço
+    const gone = p1.goneAt != null ? p1.goneAt : p2.goneAt;
+    return movingActor(pack, total, survBody(s, total, [...p1.hits, ...p2.hits], gone), 50);
   });
 
-  const k1 = match1.killer;
-  const k2 = match2.killer;
-  const kMid = new Timeline(map.gens);
-  kMid.pts = [{ ...k1.pts[k1.pts.length - 1] }];
-  kMid.times = [k1.times[k1.times.length - 1]];
-  kMid.t = k1.times[k1.times.length - 1];
-  kMid.at(P(W / 2, 80));
-  kMid.wait(0.8);
-  kMid.at(k2.pts[0]);
-  const kMidP = kMid.packed();
-  const kPts = [...k1.pts, ...kMidP.pts.slice(1), ...k2.pts.slice(1)];
-  const kTimes = [...k1.times, ...kMidP.times.slice(1), ...k2.times.slice(1)];
-  const killerNode = movingActor(kPts, kTimes, total, trapperBody(), 58);
+  const kMid = new Actor(map.blockers, m1.killer.pts[m1.killer.pts.length - 1]);
+  kMid.t = m1.killer.times[m1.killer.times.length - 1];
+  kMid.times = [kMid.t];
+  kMid.pts = [m1.killer.pts[m1.killer.pts.length - 1]];
+  kMid.go(P(W / 2, 75));
+  kMid.wait(0.6);
+  kMid.go(m2.killer.pts[0]);
+  const kMidOut = kMid.out();
+  const kPack = resample(
+    [...m1.killer.pts, ...kMidOut.pts.slice(1), ...m2.killer.pts.slice(1)],
+    [...m1.killer.times, ...kMidOut.times.slice(1), ...m2.killer.times.slice(1)],
+    MAX_KEYS
+  );
+  const killerNode = movingActor(kPack, total, trapperBody(), 58);
 
-  const genNodes = map.gens.map((g, i) => {
-    const wins = [...(match1.genWindows[i] || []), ...(match2.genWindows[i] || [])];
-    return genProp(g, i, total, wins);
-  });
+  const genNodes = map.gens.map((g, i) =>
+    genProp(g, i, total, [...(m1.genWindows[i] || []), ...(m2.genWindows[i] || [])])
+  );
 
   const stamp = new Date().toISOString();
-
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" role="img" aria-label="Dead by Daylight arena">
-  <title>DbD — all gens then gate</title>
+  <title>DbD v7</title>
   <desc>${esc(`seed ${seed} · ${total}s · ${o1}→${o2} · ${stamp}`)}</desc>
   <defs>
     <radialGradient id="fog" cx="50%" cy="40%" r="70%">
@@ -620,16 +591,16 @@ function generate() {
   <rect x="1" y="1" width="${W - 2}" height="${H - 2}" rx="13" fill="none" stroke="#3d1f24"/>
   ${scenery(map)}
   ${genNodes.join('\n')}
-  ${gateProp(map.gateA, total, match1.gateOpenT)}
-  ${gateProp(map.gateB, total, match2.gateOpenT)}
+  ${gateProp(map.gate, total, m1.gateOpenT)}
+  ${gateProp(P(map.gate.x, map.gate.y + 70), total, m2.gateOpenT)}
   ${survNodes.join('\n')}
   ${killerNode}
   ${banner(total, [
-    { t: match1.resolveT, ...labels[o1] },
-    { t: match2.resolveT, ...labels[o2] },
+    { t: m1.resolveT, ...labels[o1] },
+    { t: m2.resolveT, ...labels[o2] },
   ])}
   <text x="16" y="22" fill="#c9d1d9" font-family="ui-monospace,Consolas,monospace" font-size="11">DEAD BY DAYLIGHT · seed ${seed}</text>
-  <text x="16" y="36" fill="#7d8590" font-family="ui-monospace,Consolas,monospace" font-size="9">all gens 100% → gate opens · ${o1} → ${o2} · ${total}s</text>
+  <text x="16" y="36" fill="#7d8590" font-family="ui-monospace,Consolas,monospace" font-size="9">repair only on gen · all 100% → gate · ${o1} → ${o2}</text>
 </svg>
 `;
 }
@@ -638,8 +609,8 @@ function main() {
   const outDir = process.argv[2] || path.join(__dirname, '..', 'dist');
   fs.mkdirSync(outDir, { recursive: true });
   const svg = generate();
-  for (const name of ['dbd-arena.svg', 'dbd-arena-dark.svg', 'foice-frutas.svg', 'foice-frutas-dark.svg']) {
-    fs.writeFileSync(path.join(outDir, name), svg, 'utf8');
+  for (const n of ['dbd-arena.svg', 'dbd-arena-dark.svg', 'foice-frutas.svg', 'foice-frutas-dark.svg']) {
+    fs.writeFileSync(path.join(outDir, n), svg, 'utf8');
   }
   console.log('OK', Buffer.byteLength(svg), 'bytes');
 }
