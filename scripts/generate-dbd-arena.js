@@ -56,9 +56,54 @@ function kt(n) {
 function sp(n) {
   return Array(Math.max(1, n)).fill('0.45 0.05 0.25 1').join('; ');
 }
-/** keyTimes absolutos 0..1 a partir de tempos em segundos no ciclo total */
+/**
+ * Normaliza tempos SMIL: estritamente crescentes, começam em 0 e TERMINAM em 1.
+ * (Se keyTimes não termina em 1, o SMIL invalida e o personagem fica em 0,0 — canto do mapa.)
+ */
+function normalizeKeyframes(points, timesSec, total) {
+  const n = Math.min(points.length, timesSec.length);
+  const pts = [];
+  const raw = [];
+  for (let i = 0; i < n; i++) {
+    pts.push(points[i]);
+    raw.push(clamp(timesSec[i] / total, 0, 0.999));
+  }
+  if (pts.length < 2) {
+    const p = pts[0] || P(W / 2, H / 2);
+    return { points: [p, p], keyTimes: '0;1', values: tx([p, p]) };
+  }
+  // forçar crescente
+  raw[0] = 0;
+  for (let i = 1; i < raw.length; i++) {
+    if (raw[i] <= raw[i - 1]) raw[i] = Math.min(0.999, raw[i - 1] + 0.008);
+  }
+  raw[raw.length - 1] = 1;
+  // se o penúltimo ficou >= 1 por arredondamento, espalhar de novo
+  for (let i = raw.length - 2; i >= 1; i--) {
+    if (raw[i] >= raw[i + 1]) raw[i] = Math.max(raw[i - 1] + 0.004, raw[i + 1] - 0.004);
+  }
+  raw[0] = 0;
+  raw[raw.length - 1] = 1;
+  const keyTimes = raw.map((t) => t.toFixed(4)).join('; ');
+  return { points: pts, keyTimes, values: tx(pts) };
+}
 function absTimes(secs, total) {
-  return secs.map((s) => clamp(s / total, 0, 1).toFixed(4)).join('; ');
+  // usado em gens/props — também força 0..1
+  const { keyTimes } = normalizeKeyframes(
+    secs.map(() => P(0, 0)),
+    secs,
+    total
+  );
+  // recompute progress-aligned: just normalize the sec list
+  const n = secs.length;
+  if (n < 2) return '0;1';
+  const raw = secs.map((s) => clamp(s / total, 0, 0.999));
+  raw[0] = 0;
+  for (let i = 1; i < raw.length; i++) {
+    if (raw[i] <= raw[i - 1]) raw[i] = Math.min(0.999, raw[i - 1] + 0.008);
+  }
+  raw[raw.length - 1] = 1;
+  return raw.map((t) => t.toFixed(4)).join('; ');
 }
 function hold(p, n = 2) {
   return Array.from({ length: n }, () => ({ ...p }));
@@ -408,18 +453,16 @@ function scriptMatch(map, t0, matchLen, outcome) {
 }
 
 function actorAnim(points, timesSec, total, extraInner = '') {
-  // normalizar
-  const t = timesSec.slice();
-  for (let i = 1; i < t.length; i++) if (t[i] <= t[i - 1]) t[i] = t[i - 1] + 0.2;
-  const values = tx(points);
-  const keyTimes = absTimes(t, total);
-  const spline = sp(points.length - 1);
+  const kf = normalizeKeyframes(points, timesSec, total);
+  const start = kf.points[0];
+  // transform estático = fallback se SMIL falhar (evita canto 0,0)
+  // calcMode linear = mais compatível que spline no <img> do GitHub
   return `
-  <g>
+  <g transform="translate(${start.x} ${start.y})">
     <animateTransform attributeName="transform" type="translate"
-      values="${values}" keyTimes="${keyTimes}"
-      dur="${total}s" begin="0s" repeatCount="indefinite" calcMode="spline"
-      keySplines="${spline}"/>
+      values="${kf.values}" keyTimes="${kf.keyTimes}"
+      dur="${total}s" begin="0s" repeatCount="indefinite" calcMode="linear"
+      fill="freeze"/>
     <g>${extraInner}</g>
   </g>`;
 }
