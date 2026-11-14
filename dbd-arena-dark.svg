@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="920" height="320" viewBox="0 0 920 320" role="img" aria-label="Dead by Daylight arena">
+  <title>DbD v7</title>
+  <desc>seed mwgfhblq · 276.96s · 4k→3k · 2026-11-14T13:15:06.125Z</desc>
+  <defs>
+    <radialGradient id="fog" cx="50%" cy="40%" r="70%">
+      <stop offset="0%" stop-color="#1a1014"/>
+      <stop offset="100%" stop-color="#07080a"/>
+    </radialGradient>
+  </defs>
+  <rect width="920" height="320" rx="14" fill="url(#fog)"/>
+  <rect x="1" y="1" width="918" height="318" rx="13" fill="none" stroke="#3d1f24"/>
+  <rect x="40" y="280" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="80" y="120" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="120" y="80" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="120" y="120" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="120" y="160" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="120" y="240" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="200" y="280" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="240" y="160" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="240" y="200" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="280" y="80" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="280" y="200" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="280" y="240" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="320" y="280" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="360" y="280" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="400" y="120" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="440" y="120" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="440" y="160" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="440" y="200" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="440" y="280" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="480" y="120" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="480" y="200" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="600" y="80" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="600" y="120" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="600" y="200" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="640" y="120" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="640" y="160" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="720" y="40" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="720" y="240" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="720" y="280" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="760" y="80" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="760" y="240" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="760" y="280" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="800" y="120" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="800" y="200" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="800" y="240" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="800" y="280" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="840" y="200" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="880" y="160" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="880" y="200" width="40" height="40" fill="#12161c" opacity="0.25"/><rect x="880" y="240" width="40" height="40" fill="#12161c" opacity="0.25"/><g transform="translate(90,200)" opacity="0.65">
+      <rect x="-2" y="0" width="4" height="14" fill="#3d2b1f"/>
+      <ellipse cy="-6" rx="12" ry="14" fill="#1e3a2f"/></g><g transform="translate(200,70)" opacity="0.65">
+      <rect x="-2" y="0" width="4" height="14" fill="#3d2b1f"/>
+      <ellipse cy="-6" rx="12" ry="14" fill="#1e3a2f"/></g><g transform="translate(420,160)" opacity="0.65">
+      <rect x="-2" y="0" width="4" height="14" fill="#3d2b1f"/>
+      <ellipse cy="-6" rx="12" ry="14" fill="#1e3a2f"/></g><g transform="translate(640,250)" opacity="0.65">
+      <rect x="-2" y="0" width="4" height="14" fill="#3d2b1f"/>
+      <ellipse cy="-6" rx="12" ry="14" fill="#1e3a2f"/></g><g transform="translate(760,200)" opacity="0.65">
+      <rect x="-2" y="0" width="4" height="14" fill="#3d2b1f"/>
+      <ellipse cy="-6" rx="12" ry="14" fill="#1e3a2f"/></g><g transform="translate(880,160)" opacity="0.65">
+      <rect x="-2" y="0" width="4" height="14" fill="#3d2b1f"/>
+      <ellipse cy="-6" rx="12" ry="14" fill="#1e3a2f"/></g><g transform="translate(300,280)" opacity="0.65">
+      <rect x="-2" y="0" width="4" height="14" fill="#3d2b1f"/>
+      <ellipse cy="-6" rx="12" ry="14" fill="#1e3a2f"/></g><g transform="translate(560,60)" opacity="0.65">
+      <rect x="-2" y="0" width="4" height="14" fill="#3d2b1f"/>
+      <ellipse cy="-6" rx="12" ry="14" fill="#1e3a2f"/></g><ellipse cx="160" cy="160" rx="11" ry="7" fill="#2a3038" stroke="#3d4450" opacity="0.8"/><ellipse cx="400" cy="210" rx="11" ry="7" fill="#2a3038" stroke="#3d4450" opacity="0.8"/><ellipse cx="650" cy="80" rx="11" ry="7" fill="#2a3038" stroke="#3d4450" opacity="0.8"/><ellipse cx="780" cy="250" rx="11" ry="7" fill="#2a3038" stroke="#3d4450" opacity="0.8"/><ellipse cx="500" cy="280" rx="11" ry="7" fill="#2a3038" stroke="#3d4450" opacity="0.8"/><rect x="220" y="150" width="70" height="12" rx="2" fill="#252b33" stroke="#3d4450"/><rect x="500" y="170" width="80" height="12" rx="2" fill="#252b33" stroke="#3d4450"/><rect x="680" y="140" width="60" height="12" rx="2" fill="#252b33" stroke="#3d4450"/><rect x="300" y="200" width="12" height="55" rx="2" fill="#252b33" stroke="#3d4450"/><rect x="232" y="176" width="36" height="8" rx="1" fill="#6b4f2e" stroke="#c4a574"/>
+    <text x="250" y="198" text-anchor="middle" fill="#6e7681" font-size="7" font-family="monospace">HIDE</text><rect x="502" y="196" width="36" height="8" rx="1" fill="#6b4f2e" stroke="#c4a574"/>
+    <text x="520" y="218" text-anchor="middle" fill="#6e7681" font-size="7" font-family="monospace">HIDE</text><rect x="702" y="171" width="36" height="8" rx="1" fill="#6b4f2e" stroke="#c4a574"/>
+    <text x="720" y="193" text-anchor="middle" fill="#6e7681" font-size="7" font-family="monospace">HIDE</text><rect x="162" y="226" width="36" height="8" rx="1" fill="#6b4f2e" stroke="#c4a574"/>
+    <text x="180" y="248" text-anchor="middle" fill="#6e7681" font-size="7" font-family="monospace">HIDE</text>
+  
+  <g transform="translate(120,100)">
+    <circle r="24" fill="#0d1117" opacity="0.4"/>
+    <rect x="-18" y="-12" width="36" height="24" rx="3" fill="#1c2128" stroke="#6e7681" stroke-width="1.5"/>
+    <rect x="-14" y="-8" width="28" height="8" rx="1" fill="#0d1117"/>
+    <rect x="-11" y="-22" width="6" height="12" fill="#8b949e">
+      <animate attributeName="y" values="-22;-25;-22" dur="2.3s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="5" y="-22" width="6" height="12" fill="#8b949e">
+      <animate attributeName="y" values="-22;-24;-22" dur="2.6s" begin="0.35s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="-16" y="14" width="32" height="5" rx="1" fill="#21262d"/>
+    <rect x="-16" y="14" width="0" height="5" rx="1" fill="#3fb950">
+      <animate attributeName="width" values="0.0;0.0;28.0;28.0;28.0;28.0" keyTimes="0.0000;0.0058;0.0271;0.4899;0.5108;1.0000" dur="276.96s" repeatCount="indefinite"/>
+    </rect>
+    <text y="34" text-anchor="middle" fill="#7d8590" font-size="8" font-family="monospace">GEN 1</text>
+  </g>
+
+  <g transform="translate(350,90)">
+    <circle r="24" fill="#0d1117" opacity="0.4"/>
+    <rect x="-18" y="-12" width="36" height="24" rx="3" fill="#1c2128" stroke="#6e7681" stroke-width="1.5"/>
+    <rect x="-14" y="-8" width="28" height="8" rx="1" fill="#0d1117"/>
+    <rect x="-11" y="-22" width="6" height="12" fill="#8b949e">
+      <animate attributeName="y" values="-22;-25;-22" dur="2.3s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="5" y="-22" width="6" height="12" fill="#8b949e">
+      <animate attributeName="y" values="-22;-24;-22" dur="2.6s" begin="0.35s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="-16" y="14" width="32" height="5" rx="1" fill="#21262d"/>
+    <rect x="-16" y="14" width="0" height="5" rx="1" fill="#3fb950">
+      <animate attributeName="width" values="0.0;0.0;28.0;28.0;28.0;28.0" keyTimes="0.0000;0.0115;0.0328;0.4945;0.5155;1.0000" dur="276.96s" repeatCount="indefinite"/>
+    </rect>
+    <text y="34" text-anchor="middle" fill="#7d8590" font-size="8" font-family="monospace">GEN 2</text>
+  </g>
+
+  <g transform="translate(580,100)">
+    <circle r="24" fill="#0d1117" opacity="0.4"/>
+    <rect x="-18" y="-12" width="36" height="24" rx="3" fill="#1c2128" stroke="#6e7681" stroke-width="1.5"/>
+    <rect x="-14" y="-8" width="28" height="8" rx="1" fill="#0d1117"/>
+    <rect x="-11" y="-22" width="6" height="12" fill="#8b949e">
+      <animate attributeName="y" values="-22;-25;-22" dur="2.3s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="5" y="-22" width="6" height="12" fill="#8b949e">
+      <animate attributeName="y" values="-22;-24;-22" dur="2.6s" begin="0.35s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="-16" y="14" width="32" height="5" rx="1" fill="#21262d"/>
+    <rect x="-16" y="14" width="0" height="5" rx="1" fill="#3fb950">
+      <animate attributeName="width" values="0.0;0.0;28.0;28.0;28.0;28.0" keyTimes="0.0000;0.0032;0.0245;0.4918;0.5128;1.0000" dur="276.96s" repeatCount="indefinite"/>
+    </rect>
+    <text y="34" text-anchor="middle" fill="#7d8590" font-size="8" font-family="monospace">GEN 3</text>
+  </g>
+
+  <g transform="translate(800,95)">
+    <circle r="24" fill="#0d1117" opacity="0.4"/>
+    <rect x="-18" y="-12" width="36" height="24" rx="3" fill="#1c2128" stroke="#6e7681" stroke-width="1.5"/>
+    <rect x="-14" y="-8" width="28" height="8" rx="1" fill="#0d1117"/>
+    <rect x="-11" y="-22" width="6" height="12" fill="#8b949e">
+      <animate attributeName="y" values="-22;-25;-22" dur="2.3s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="5" y="-22" width="6" height="12" fill="#8b949e">
+      <animate attributeName="y" values="-22;-24;-22" dur="2.6s" begin="0.35s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="-16" y="14" width="32" height="5" rx="1" fill="#21262d"/>
+    <rect x="-16" y="14" width="0" height="5" rx="1" fill="#3fb950">
+      <animate attributeName="width" values="0.0;0.0;28.0;28.0;28.0;28.0" keyTimes="0.0000;0.0089;0.0302;0.4930;0.5140;1.0000" dur="276.96s" repeatCount="indefinite"/>
+    </rect>
+    <text y="34" text-anchor="middle" fill="#7d8590" font-size="8" font-family="monospace">GEN 4</text>
+  </g>
+
+  <g transform="translate(460,240)">
+    <circle r="24" fill="#0d1117" opacity="0.4"/>
+    <rect x="-18" y="-12" width="36" height="24" rx="3" fill="#1c2128" stroke="#6e7681" stroke-width="1.5"/>
+    <rect x="-14" y="-8" width="28" height="8" rx="1" fill="#0d1117"/>
+    <rect x="-11" y="-22" width="6" height="12" fill="#8b949e">
+      <animate attributeName="y" values="-22;-25;-22" dur="2.3s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="5" y="-22" width="6" height="12" fill="#8b949e">
+      <animate attributeName="y" values="-22;-24;-22" dur="2.6s" begin="0.35s" repeatCount="indefinite"/>
+    </rect>
+    <rect x="-16" y="14" width="32" height="5" rx="1" fill="#21262d"/>
+    <rect x="-16" y="14" width="0" height="5" rx="1" fill="#3fb950">
+      <animate attributeName="width" values="0.0;0.0;28.0;28.0;28.0;28.0" keyTimes="0.0000;0.0611;0.0824;0.5343;0.5552;1.0000" dur="276.96s" repeatCount="indefinite"/>
+    </rect>
+    <text y="34" text-anchor="middle" fill="#7d8590" font-size="8" font-family="monospace">GEN 5</text>
+  </g>
+  
+  <g transform="translate(880,160)">
+    <rect x="-12" y="-50" width="18" height="100" fill="#252b33" stroke="#6e7681"/>
+    <rect x="-9" y="-47" width="12" height="94" fill="#3fb950" opacity="0.04">
+      <animate attributeName="opacity" values="0.04;0.04;0.9;0.9" keyTimes="0;0.0838;0.1038;1" dur="276.96s" repeatCount="indefinite"/>
+    </rect>
+    <text y="62" text-anchor="middle" fill="#7d8590" font-size="8" font-family="monospace">GATE</text>
+    <text y="-56" text-anchor="middle" font-size="8" font-family="monospace" fill="#484f58">
+      <animate attributeName="fill" values="#484f58;#484f58;#3fb950;#3fb950" keyTimes="0;0.0838;0.1038;1" dur="276.96s" repeatCount="indefinite"/>
+      OPEN
+    </text>
+  </g>
+  
+  <g transform="translate(880,230)">
+    <rect x="-12" y="-50" width="18" height="100" fill="#252b33" stroke="#6e7681"/>
+    <rect x="-9" y="-47" width="12" height="94" fill="#3fb950" opacity="0.04">
+      <animate attributeName="opacity" values="0.04;0.04;0.9;0.9" keyTimes="0;0.5566;0.5766;1" dur="276.96s" repeatCount="indefinite"/>
+    </rect>
+    <text y="62" text-anchor="middle" fill="#7d8590" font-size="8" font-family="monospace">GATE</text>
+    <text y="-56" text-anchor="middle" font-size="8" font-family="monospace" fill="#484f58">
+      <animate attributeName="fill" values="#484f58;#484f58;#3fb950;#3fb950" keyTimes="0;0.5566;0.5766;1" dur="276.96s" repeatCount="indefinite"/>
+      OPEN
+    </text>
+  </g>
+  
+  <svg x="154.7" y="134.2" width="50" height="50" overflow="visible">
+    <animate attributeName="x" values="154.7;121.9;100.1;91.6;80.3;98.1;131.9;165.5;199.0;232.4;220.9;186.8;153.4;119.9;86.7;52.7;18.4;46.0;80.3;114.6;148.9;183.3;217.7;252.2;286.4;320.3;354.6;364.1;329.9;295.4;262.7;231.6;199.3;165.8;131.5;97.0;92.0;93.6;87.8;75.2;100.7;133.4;166.9;201.0;235.2;219.0;184.7;150.6;117.1;83.6;49.3;15.0" keyTimes="0.0000;0.0196;0.0392;0.0588;0.0784;0.0980;0.1176;0.1373;0.1569;0.1765;0.1961;0.2157;0.2353;0.2549;0.2745;0.2941;0.3137;0.3333;0.3529;0.3725;0.3922;0.4118;0.4314;0.4510;0.4706;0.4902;0.5098;0.5294;0.5490;0.5686;0.5882;0.6078;0.6275;0.6471;0.6667;0.6863;0.7059;0.7255;0.7451;0.7647;0.7843;0.8039;0.8235;0.8431;0.8627;0.8824;0.9020;0.9216;0.9412;0.9608;0.9804;1.0000" dur="276.96s" begin="0s" repeatCount="indefinite" calcMode="linear"/>
+    <animate attributeName="y" values="134.2;124.4;123.4;156.4;188.2;199.3;192.4;185.0;176.5;168.1;166.5;164.2;159.9;167.7;166.7;161.7;163.3;160.9;157.8;154.7;151.0;148.5;148.1;148.9;147.0;140.7;137.2;136.7;140.9;141.0;148.7;160.4;148.2;145.6;148.7;149.9;130.7;131.5;164.6;195.8;194.2;183.6;175.7;170.9;166.0;160.7;157.5;158.5;166.6;164.6;161.1;163.6" keyTimes="0.0000;0.0196;0.0392;0.0588;0.0784;0.0980;0.1176;0.1373;0.1569;0.1765;0.1961;0.2157;0.2353;0.2549;0.2745;0.2941;0.3137;0.3333;0.3529;0.3725;0.3922;0.4118;0.4314;0.4510;0.4706;0.4902;0.5098;0.5294;0.5490;0.5686;0.5882;0.6078;0.6275;0.6471;0.6667;0.6863;0.7059;0.7255;0.7451;0.7647;0.7843;0.8039;0.8235;0.8431;0.8627;0.8824;0.9020;0.9216;0.9412;0.9608;0.9804;1.0000" dur="276.96s" begin="0s" repeatCount="indefinite" calcMode="linear"/>
+    <g transform="translate(25,25)"><g>
+    <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.1035;0.1135;1" dur="276.96s" repeatCount="indefinite"/>
+    
+    <rect x="-11" y="-28" width="22" height="4" rx="1" fill="#21262d" stroke="#30363d" stroke-width="0.5"/>
+    <rect x="-11" y="-28" width="20" height="4" rx="1" fill="#3fb950">
+      <animate attributeName="width" values="20.0;20.0;0.0;0.0;0.0;0.0" keyTimes="0.0000;0.3937;0.3945;0.8214;0.8221;1.0000" dur="276.96s" repeatCount="indefinite"/>
+      <animate attributeName="fill" values="#3fb950;#3fb950;#ff4444;#ff4444;#ff4444;#ff4444" keyTimes="0.0000;0.3937;0.3945;0.8214;0.8221;1.0000" dur="276.96s" repeatCount="indefinite"/>
+    </rect>
+    <ellipse cy="3" rx="8" ry="10" fill="#f0c75e" stroke="#0d1117" stroke-width="1.2"/>
+    <circle cy="-11" r="5.5" fill="#f0c75e" stroke="#0d1117" stroke-width="1.2"/>
+    <text y="4" text-anchor="middle" dominant-baseline="central" font-size="8" font-weight="700" fill="#0d1117" font-family="Arial">D</text>
+  </g></g>
+  </svg>
+
+  <svg x="326.0" y="140.3" width="50" height="50" overflow="visible">
+    <animate attributeName="x" values="326.0;336.3;342.5;334.0;323.1;315.8;305.4;327.0;368.7;406.8;448.0;490.9;473.9;430.9;387.8;344.7;301.7;258.7;215.7;172.7;129.6;86.5;43.4;29.5;72.1;114.9;157.5;199.8;242.5;285.4;328.0;370.6;411.2;374.4;353.9;341.3;370.9;396.6;417.7;445.9;487.5;488.2;445.2;402.2;359.4;316.4;273.3;230.2;187.1;144.1;101.2;58.1;15.0" keyTimes="0.0000;0.0192;0.0385;0.0577;0.0769;0.0962;0.1154;0.1346;0.1538;0.1731;0.1923;0.2115;0.2308;0.2500;0.2692;0.2885;0.3077;0.3269;0.3462;0.3654;0.3846;0.4038;0.4231;0.4423;0.4615;0.4808;0.5000;0.5192;0.5385;0.5577;0.5769;0.5962;0.6154;0.6346;0.6538;0.6731;0.6923;0.7115;0.7308;0.7500;0.7692;0.7885;0.8077;0.8269;0.8462;0.8654;0.8846;0.9038;0.9231;0.9423;0.9615;0.9808;1.0000" dur="276.96s" begin="0s" repeatCount="indefinite" calcMode="linear"/>
+    <animate attributeName="y" values="140.3;98.4;56.7;88.5;130.2;172.6;214.4;240.3;231.2;211.2;199.8;196.8;191.4;189.0;189.9;190.2;187.0;184.7;187.2;190.3;190.6;191.2;193.4;192.7;186.1;180.3;173.9;165.4;160.1;155.1;148.6;141.6;135.3;115.0;77.1;40.9;72.1;106.6;144.1;174.6;185.6;192.6;189.8;191.2;196.5;199.9;201.5;202.3;201.5;197.8;193.3;193.7;195.0" keyTimes="0.0000;0.0192;0.0385;0.0577;0.0769;0.0962;0.1154;0.1346;0.1538;0.1731;0.1923;0.2115;0.2308;0.2500;0.2692;0.2885;0.3077;0.3269;0.3462;0.3654;0.3846;0.4038;0.4231;0.4423;0.4615;0.4808;0.5000;0.5192;0.5385;0.5577;0.5769;0.5962;0.6154;0.6346;0.6538;0.6731;0.6923;0.7115;0.7308;0.7500;0.7692;0.7885;0.8077;0.8269;0.8462;0.8654;0.8846;0.9038;0.9231;0.9423;0.9615;0.9808;1.0000" dur="276.96s" begin="0s" repeatCount="indefinite" calcMode="linear"/>
+    <g transform="translate(25,25)"><g>
+    <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.1085;0.1185;1" dur="276.96s" repeatCount="indefinite"/>
+    
+    <rect x="-11" y="-28" width="22" height="4" rx="1" fill="#21262d" stroke="#30363d" stroke-width="0.5"/>
+    <rect x="-11" y="-28" width="20" height="4" rx="1" fill="#3fb950">
+      <animate attributeName="width" values="20.0;20.0;0.0;0.0;0.0;0.0" keyTimes="0.0000;0.4402;0.4409;0.8499;0.8506;1.0000" dur="276.96s" repeatCount="indefinite"/>
+      <animate attributeName="fill" values="#3fb950;#3fb950;#ff4444;#ff4444;#ff4444;#ff4444" keyTimes="0.0000;0.4402;0.4409;0.8499;0.8506;1.0000" dur="276.96s" repeatCount="indefinite"/>
+    </rect>
+    <ellipse cy="3" rx="8" ry="10" fill="#ff6b8a" stroke="#0d1117" stroke-width="1.2"/>
+    <circle cy="-11" r="5.5" fill="#ff6b8a" stroke="#0d1117" stroke-width="1.2"/>
+    <text y="4" text-anchor="middle" dominant-baseline="central" font-size="8" font-weight="700" fill="#0d1117" font-family="Arial">M</text>
+  </g></g>
+  </svg>
+
+  <svg x="500.4" y="109.5" width="50" height="50" overflow="visible">
+    <animate attributeName="x" values="500.4;520.9;501.0;473.3;452.7;422.6;417.2;439.8;468.0;496.0;532.2;578.3;624.0;661.9;703.4;647.5;591.5;535.8;480.1;424.2;368.4;312.7;257.0;201.2;145.5;89.5;33.5;52.4;108.3;164.2;219.2;273.5;328.2;383.7;439.6;495.5;550.9;558.4;531.2;549.4;595.2;641.1;686.9;686.4;630.5;574.5;518.6;462.6;406.6;350.6;294.7;238.7;182.8;127.0;71.0;15.0" keyTimes="0.0000;0.0182;0.0364;0.0545;0.0727;0.0909;0.1091;0.1273;0.1455;0.1636;0.1818;0.2000;0.2182;0.2364;0.2545;0.2727;0.2909;0.3091;0.3273;0.3455;0.3636;0.3818;0.4000;0.4182;0.4364;0.4545;0.4727;0.4909;0.5091;0.5273;0.5455;0.5636;0.5818;0.6000;0.6182;0.6364;0.6545;0.6727;0.6909;0.7091;0.7273;0.7455;0.7636;0.7818;0.8000;0.8182;0.8364;0.8545;0.8727;0.8909;0.9091;0.9273;0.9455;0.9636;0.9818;1.0000" dur="276.96s" begin="0s" repeatCount="indefinite" calcMode="linear"/>
+    <animate attributeName="y" values="109.5;62.4;57.4;106.0;157.9;205.0;212.7;161.5;113.2;64.7;37.4;67.4;98.8;138.7;149.5;151.9;151.5;146.6;141.4;144.0;149.1;154.8;160.3;156.4;151.8;150.1;150.0;147.5;144.8;146.9;156.5;153.3;141.6;135.8;132.3;130.3;136.5;123.3;76.5;48.8;80.7;111.8;141.1;149.4;148.6;149.5;152.1;153.7;153.3;153.7;156.0;155.9;152.2;148.7;149.3;150.0" keyTimes="0.0000;0.0182;0.0364;0.0545;0.0727;0.0909;0.1091;0.1273;0.1455;0.1636;0.1818;0.2000;0.2182;0.2364;0.2545;0.2727;0.2909;0.3091;0.3273;0.3455;0.3636;0.3818;0.4000;0.4182;0.4364;0.4545;0.4727;0.4909;0.5091;0.5273;0.5455;0.5636;0.5818;0.6000;0.6182;0.6364;0.6545;0.6727;0.6909;0.7091;0.7273;0.7455;0.7636;0.7818;0.8000;0.8182;0.8364;0.8545;0.8727;0.8909;0.9091;0.9273;0.9455;0.9636;0.9818;1.0000" dur="276.96s" begin="0s" repeatCount="indefinite" calcMode="linear"/>
+    <g transform="translate(25,25)"><g>
+    <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.1366;0.1466;1" dur="276.96s" repeatCount="indefinite"/>
+    
+    <rect x="-11" y="-28" width="22" height="4" rx="1" fill="#21262d" stroke="#30363d" stroke-width="0.5"/>
+    <rect x="-11" y="-28" width="20" height="4" rx="1" fill="#3fb950">
+      <animate attributeName="width" values="20.0;20.0;0.0;0.0;0.0;0.0" keyTimes="0.0000;0.4627;0.4634;0.8721;0.8728;1.0000" dur="276.96s" repeatCount="indefinite"/>
+      <animate attributeName="fill" values="#3fb950;#3fb950;#ff4444;#ff4444;#ff4444;#ff4444" keyTimes="0.0000;0.4627;0.4634;0.8721;0.8728;1.0000" dur="276.96s" repeatCount="indefinite"/>
+    </rect>
+    <ellipse cy="3" rx="8" ry="10" fill="#6bcb77" stroke="#0d1117" stroke-width="1.2"/>
+    <circle cy="-11" r="5.5" fill="#6bcb77" stroke="#0d1117" stroke-width="1.2"/>
+    <text y="4" text-anchor="middle" dominant-baseline="central" font-size="8" font-weight="700" fill="#0d1117" font-family="Arial">C</text>
+  </g></g>
+  </svg>
+
+  <svg x="720.1" y="133.8" width="50" height="50" overflow="visible">
+    <animate attributeName="x" values="720.1;732.8;745.6;756.3;777.2;799.1;811.8;780.1;739.7;699.3;659.0;618.6;578.2;537.8;497.4;457.2;417.1;376.8;337.2;297.2;257.0;217.0;176.8;136.4;96.0;55.6;15.3;54.7;94.5;134.1;173.8;213.8;254.0;294.3;334.2;373.8;413.3;452.8;492.0;530.6;569.4;608.8;648.7;689.0;729.3;758.9;754.7;752.5;767.9;792.1;812.6;823.7;855.0" keyTimes="0.0000;0.0192;0.0385;0.0577;0.0769;0.0962;0.1154;0.1346;0.1538;0.1731;0.1923;0.2115;0.2308;0.2500;0.2692;0.2885;0.3077;0.3269;0.3462;0.3654;0.3846;0.4038;0.4231;0.4423;0.4615;0.4808;0.5000;0.5192;0.5385;0.5577;0.5769;0.5962;0.6154;0.6346;0.6538;0.6731;0.6923;0.7115;0.7308;0.7500;0.7692;0.7885;0.8077;0.8269;0.8462;0.8654;0.8846;0.9038;0.9231;0.9423;0.9615;0.9808;1.0000" dur="276.96s" begin="0s" repeatCount="indefinite" calcMode="linear"/>
+    <animate attributeName="y" values="133.8;95.4;57.1;82.4;116.2;150.0;187.7;195.7;196.3;195.8;194.4;193.1;192.8;193.3;194.2;198.7;203.4;201.5;193.8;190.6;193.7;199.2;203.2;204.8;205.2;204.1;205.0;199.0;191.9;183.9;176.5;170.9;166.7;163.7;157.6;150.0;141.1;132.9;123.4;111.5;121.5;130.4;136.2;133.7;131.5;119.5;79.4;66.6;103.2;135.6;170.4;167.5;153.0" keyTimes="0.0000;0.0192;0.0385;0.0577;0.0769;0.0962;0.1154;0.1346;0.1538;0.1731;0.1923;0.2115;0.2308;0.2500;0.2692;0.2885;0.3077;0.3269;0.3462;0.3654;0.3846;0.4038;0.4231;0.4423;0.4615;0.4808;0.5000;0.5192;0.5385;0.5577;0.5769;0.5962;0.6154;0.6346;0.6538;0.6731;0.6923;0.7115;0.7308;0.7500;0.7692;0.7885;0.8077;0.8269;0.8462;0.8654;0.8846;0.9038;0.9231;0.9423;0.9615;0.9808;1.0000" dur="276.96s" begin="0s" repeatCount="indefinite" calcMode="linear"/>
+    <g transform="translate(25,25)"><g>
+    <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.1505;0.1605;1" dur="276.96s" repeatCount="indefinite"/>
+    
+    <rect x="-11" y="-28" width="22" height="4" rx="1" fill="#21262d" stroke="#30363d" stroke-width="0.5"/>
+    <rect x="-11" y="-28" width="20" height="4" rx="1" fill="#3fb950">
+      <animate attributeName="width" values="20.0;20.0;0.0;0.0;7.0;7.0" keyTimes="0.0000;0.4040;0.4047;0.9287;0.9294;1.0000" dur="276.96s" repeatCount="indefinite"/>
+      <animate attributeName="fill" values="#3fb950;#3fb950;#ff4444;#ff4444;#f0c75e;#f0c75e" keyTimes="0.0000;0.4040;0.4047;0.9287;0.9294;1.0000" dur="276.96s" repeatCount="indefinite"/>
+    </rect>
+    <ellipse cy="3" rx="8" ry="10" fill="#c4a574" stroke="#0d1117" stroke-width="1.2"/>
+    <circle cy="-11" r="5.5" fill="#c4a574" stroke="#0d1117" stroke-width="1.2"/>
+    <text y="4" text-anchor="middle" dominant-baseline="central" font-size="8" font-weight="700" fill="#0d1117" font-family="Arial">J</text>
+  </g></g>
+  </svg>
+  
+  <svg x="431.0" y="41.0" width="58" height="58" overflow="visible">
+    <animate attributeName="x" values="431.0;309.9;319.1;468.0;617.8;686.5;534.9;381.7;228.5;326.0;476.3;629.5;583.4;428.9;271.0;141.8;286.8;436.6;588.9;605.1;447.1;288.9;252.8;408.6;565.5;719.4;667.6;516.2;492.5;614.1;456.2;298.0;140.3;221.1;375.1;528.9;682.6;610.0;455.5;303.0;256.6;414.2;424.0;408.7;461.1;305.1;390.1;546.0;670.6;514.1;357.2;200.4;298.7;456.6;614.6;771.0" keyTimes="0.0000;0.0182;0.0364;0.0545;0.0727;0.0909;0.1091;0.1273;0.1455;0.1636;0.1818;0.2000;0.2182;0.2364;0.2545;0.2727;0.2909;0.3091;0.3273;0.3455;0.3636;0.3818;0.4000;0.4182;0.4364;0.4545;0.4727;0.4909;0.5091;0.5273;0.5455;0.5636;0.5818;0.6000;0.6182;0.6364;0.6545;0.6727;0.6909;0.7091;0.7273;0.7455;0.7636;0.7818;0.8000;0.8182;0.8364;0.8545;0.8727;0.8909;0.9091;0.9273;0.9455;0.9636;0.9818;1.0000" dur="276.96s" begin="0s" repeatCount="indefinite" calcMode="linear"/>
+    <animate attributeName="y" values="41.0;141.9;188.4;135.2;85.2;59.8;105.0;143.4;182.9;153.6;105.0;126.9;131.4;116.1;116.8;116.7;176.4;217.6;176.5;150.9;158.5;157.2;205.4;197.9;177.5;142.2;110.5;78.2;62.1;124.7;114.4;113.1;102.4;145.8;131.8;95.0;58.1;86.2;118.2;160.8;189.2;182.1;105.9;101.6;185.0;164.5;169.3;177.9;150.6;174.3;183.2;194.8;173.7;162.3;155.2;131.0" keyTimes="0.0000;0.0182;0.0364;0.0545;0.0727;0.0909;0.1091;0.1273;0.1455;0.1636;0.1818;0.2000;0.2182;0.2364;0.2545;0.2727;0.2909;0.3091;0.3273;0.3455;0.3636;0.3818;0.4000;0.4182;0.4364;0.4545;0.4727;0.4909;0.5091;0.5273;0.5455;0.5636;0.5818;0.6000;0.6182;0.6364;0.6545;0.6727;0.6909;0.7091;0.7273;0.7455;0.7636;0.7818;0.8000;0.8182;0.8364;0.8545;0.8727;0.8909;0.9091;0.9273;0.9455;0.9636;0.9818;1.0000" dur="276.96s" begin="0s" repeatCount="indefinite" calcMode="linear"/>
+    <g transform="translate(29,29)">
+    <ellipse cy="3" rx="11" ry="14" fill="#2b2f36" stroke="#9b2226" stroke-width="1.6"/>
+    <circle cy="-13" r="7.5" fill="#3d4450" stroke="#c9d1d9"/>
+    <circle cx="-2.8" cy="-14" r="1.4" fill="#ff3333"/>
+    <circle cx="2.8" cy="-14" r="1.4" fill="#ff3333"/>
+    <rect x="-15" y="-5" width="9" height="6" rx="1" fill="#6e7681"/>
+    <rect x="6" y="-5" width="9" height="6" rx="1" fill="#6e7681"/>
+    <rect x="11" y="-3" width="18" height="4" rx="1" fill="#c9d1d9" transform="rotate(-18 11 0)"/>
+    <circle r="20" fill="none" stroke="#9b2226" stroke-width="1" opacity="0.35">
+      <animate attributeName="r" values="16;24;16" dur="2.2s" repeatCount="indefinite"/>
+    </circle></g>
+  </svg>
+  
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.4668;0.4704;0.4805;0.4849;1" dur="276.96s" repeatCount="indefinite"/>
+    <rect x="240" y="134" width="440" height="52" rx="8" fill="#0d1117" stroke="#ff4444" stroke-width="2" opacity="0.94"/>
+    <text x="460" y="166" text-anchor="middle" fill="#ff4444" font-size="16" font-family="Georgia,serif" font-weight="700">THE ENTITY HUNGERS — 4K</text>
+  </g>
+
+  <g opacity="0">
+    <animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;0.9874;0.9700;1.0000;1.0000;1" dur="276.96s" repeatCount="indefinite"/>
+    <rect x="240" y="134" width="440" height="52" rx="8" fill="#0d1117" stroke="#ff6b35" stroke-width="2" opacity="0.94"/>
+    <text x="460" y="166" text-anchor="middle" fill="#ff6b35" font-size="16" font-family="Georgia,serif" font-weight="700">TRAPPER DOMINATES — 3K</text>
+  </g>
+  <text x="16" y="22" fill="#c9d1d9" font-family="ui-monospace,Consolas,monospace" font-size="11">DEAD BY DAYLIGHT · seed mwgfhblq</text>
+  <text x="16" y="36" fill="#7d8590" font-family="ui-monospace,Consolas,monospace" font-size="9">repair only on gen · all 100% → gate · 4k → 3k</text>
+</svg>
